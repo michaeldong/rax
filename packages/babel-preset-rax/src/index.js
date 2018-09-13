@@ -12,6 +12,7 @@ module.exports = {
     presetStage0,
   ],
   plugins: resolvePlugins([
+    'transform-decorators-legacy',
     'syntax-jsx',
     'transform-react-display-name',
     ['transform-react-jsx', {
@@ -19,7 +20,7 @@ module.exports = {
     }],
     'transform-jsx-stylesheet',
     // webpack 3 may not need this plugin
-    process.env.BABEL_NO_ADD_MODULE_EXPORTS ? null : 'add-module-exports',
+    process.env.BABEL_ADD_MODULE_EXPORTS !== 'false' ? 'add-module-exports' : null,
   ]),
   env: {
     development: {

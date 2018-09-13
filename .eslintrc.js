@@ -1,10 +1,8 @@
-/* eslint quotes: false */
+/* eslint quotes: off */
 
 module.exports = {
   "root": true,
-
   "parser": "babel-eslint",
-
   "env": {
     "browser": true,
     "node": true,
@@ -30,20 +28,6 @@ module.exports = {
       "experimentalObjectRestSpread": true
     }
   },
-  "ecmaFeatures": {
-    "arrowFunctions": true,
-    "blockBindings": true,
-    "classes": true,
-    "defaultParams": true,
-    "destructuring": true,
-    "forOf": true,
-    "objectLiteralComputedProperties": true,
-    "objectLiteralShorthandMethods": true,
-    "objectLiteralShorthandProperties": true,
-    "spread": true,
-    "superInFunctions": true,
-    "templateStrings": true
-  },
   "globals": {
     "__weex_data__": true,
     "__weex_options__": true,
@@ -52,9 +36,9 @@ module.exports = {
     "__weex_require__": true,
     "WXEnvironment": true,
     "webkitRequestAnimationFrame": true,
+    "webkitCancelAnimationFrame": true,
     "jasmine": true
   },
-
   "rules": {
     // ES6
     "prefer-const": "off",
@@ -162,7 +146,6 @@ module.exports = {
      */
     "import/newline-after-import": "error",
     "import/no-duplicates": "error",
-    "import/no-unresolved": "error",
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -171,7 +154,10 @@ module.exports = {
           "**/scripts/*.js",
           "**/__tests__/*.js",
           "**/__tests__/**/*.js",
-          '**/*.config.js'
+          '**/*.config.js',
+          "**/config/*.js",
+          "**/*.conf.js",
+          "**/tests/*.test.js"
         ]
       }
     ],
@@ -190,7 +176,7 @@ module.exports = {
     "react/jsx-indent-props": ["error", 2], // 2 spaces indentation
     "react/jsx-no-duplicate-props": "error",
     "react/jsx-no-undef": "error",
-    "react/jsx-space-before-closing": "error",
+    "react/jsx-tag-spacing": "error",
     "react/jsx-no-comment-textnodes": "error",
     "react/jsx-equals-spacing": "error",
     "react/jsx-handler-names": "off",
@@ -200,7 +186,7 @@ module.exports = {
     "react/no-children-prop": "error",
     "react/no-did-mount-set-state": "error",
     "react/no-did-update-set-state": "error",
-    "react/no-unknown-property": "error",
+    "react/no-unknown-property": "off",
     "react/style-prop-object": "error",
     "react/react-in-jsx-scope": "error",
     "react/self-closing-comp": "error",

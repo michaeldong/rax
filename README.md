@@ -1,11 +1,11 @@
 <p align="center">
   <a href="https://alibaba.github.io/rax">
-    <img alt="Rax" src="https://gw.alicdn.com/L1/461/1/40137b64ab73a123e78d8246cd81c8379358c999_400x400.jpg" width="200">
+    <img alt="Rax" src="https://user-images.githubusercontent.com/677114/39803702-603fd170-53a4-11e8-994d-bffc24e9fb07.png" width="56">
   </a>
 </p>
 
 <p align="center">
-A universal React-compatible render engine.
+A hyperscript render engine.
 </p>
 
 <p align="center">
@@ -29,80 +29,124 @@ Community
 
 * <details>
   <summary>钉钉群</summary>
-  <a href="http://qr.dingtalk.com/action/joingroup?code=v1,k1,CP2dPkf6aojTT2QdsLM1GK4vDw4x3Q3UMdC96zOTGWzA09r+RLlVDuyQIAt5L+xqo/WU2LKsFRUYCTNKl7J/riENfO/4JdpdPsdf2DCoeF8tH9f9QvubrOUvmN6NriqFXtEUb0fp/hjJPUzBWCyDJCM63BVN7p2I"><img alt="Join the chat at dingtalk" src="https://cloud.githubusercontent.com/assets/677114/23734081/a3651cd6-04b7-11e7-8290-11fb20b722b4.png"></a>
+  <a href="https://qr.dingtalk.com/action/joingroup?code=v1,k1,kvz0NeXx/rsf/3KhrDQU9J1ZxS0DvkGbL8vvKpCsm04=&_dt_no_comment=1&origin=11"><img alt="Join the chat at dingtalk" src="https://user-images.githubusercontent.com/677114/41036929-486fd78a-69c4-11e8-9eb7-cd69b89821c1.png"></a>
 </details>
 
 ---
 
-Rax is a universal JavaScript library with a largely React-compatible API. If you use React, you already know how to use Rax.
-
 :zap: **Fast:** blazing fast virtual DOM.
 
-:dart: **Tiny:** 8.0 KB minified + gzipped.
+:dart: **Tiny:** 12.6 KB minified + gzipped.
 
-:art: **Universal:** works in browsers, Weex, Node.js and could works more container that implement [driver specification](./docs/en-US/driver-spec.md).
+:art: **Universal:** works in browsers, Weex, Node.js, Mini-program, WebGL and could works more container that implement [driver specification](./docs/en-US/driver-spec.md).
 
 ## Quick Start
 
 Install the Rax CLI tools to init project:
 
 ```sh
-npm install rax-cli -g
-rax init YourProjectName
+$ npm install rax-cli -g
+$ rax init <YourProjectName>
 ```
 
 Start local server to launch project:
 ```sh
-cd YourProjectName
-npm run start
+$ cd YourProjectName
+$ npm run start
 ```
 
-## Examples
+## Example
 
-```js
-import {createElement, Component, render} from 'rax';
-import Text from 'rax-text';
+### JSX DSL
+```jsx
+// Hello.jsx
+import {createElement, Component} from 'rax';
 
-class Hello extends Component {
+export default class extends Component {
+  state = {
+    name: 'world'
+  };
+  onChange = ()=>{
+    this.setState({
+      name: 'rax'
+    });
+  };
   render() {
-    return [
-      <Text style={styles.title}>Hello Rax</Text>,
-      <Text style={styles.title}>Hello {this.props.name}</Text>,
-    ];
+    return (
+      <view style={styles.hello}>
+        <text style={styles.title} onClick={this.onChange}>
+        Hello {this.state.name}
+        </text>
+      </view>
+    );
   }
 }
 
 const styles = {
+  hello: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   title: {
-    color: '#ff4400',
-    fontSize: 48,
-    fontWeight: 'bold',
+    fontSize: '40px',
+    textAlign: 'center'
   }
 };
+```
+
+### SFC(Single File Component) DSL
+> SFC is a Vue-like DSL that will compile to JSX DSL.
+
+```html
+<!-- hello.html -->
+<template>
+  <view class="hello">
+    <text class="title" @click="change">Hello {{name}}</text>
+  </view>
+</template>
+
+<script>
+  export default {
+    data: function () {
+      return {
+        name: 'world'
+      }
+    },
+    methods: {
+      change () {
+        this.name = 'rax';
+      }
+    }
+  }
+</script>
+
+<style>
+  .hello {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .title {
+    font-size: 40px;
+    text-align: center;
+  }
+</style>
+```
+
+```js
+// app.js
+import {render} from 'rax';
+import Hello from './hello';
 
 render(<Hello name="world" />);
 ```
-
-More examples take a look at the [`examples`](/examples/) folder:
-* [Components](./examples/components)
-* [Redux](/examples/redux)
-* [Canvas](/examples/canvas)
-* [Charts](/examples/charts)
-* [Drag](/examples/drag)
-* [Animated](/examples/animated)
-* [Profile](/examples/profile)
-* [Parallax](/examples/parallax)
 
 ## Rax Renderers
 
 * :traffic_light: [rax-test-renderer](/packages/rax-test-renderer): Rax renderer for snapshot testing.
 * :computer: [rax-server-renderer](/packages/rax-server-renderer): Rax renderer for server-side render.
-
-## Rax Drivers
-* :earth_asia: [driver-browser](/packages/driver-browser): A driver for webkit browser.
-* :bullettrain_front: [driver-weex](/packages/driver-weex): A driver for weex container.
-* :tractor: [driver-server](/packages/driver-server): A driver for server-side render.
-* :bus: [driver-webgl](/packages/driver-webgl): A driver for 3d render.
 
 ## Compatible with React Components
 
@@ -225,8 +269,4 @@ Then, you can run several commands:
 </table>
 
 ---
-<a href="https://weex.apache.org/">
-  <img alt="Weex Logo" src="https://img.alicdn.com/tps/TB1zBLaPXXXXXXeXXXXXXXXXXXX-121-59.svg" width="200">
-</a>
-
 **[⬆ back to top](#top)**

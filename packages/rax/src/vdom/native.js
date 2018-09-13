@@ -8,7 +8,7 @@ import instance from './instance';
 const STYLE = 'style';
 const CHILDREN = 'children';
 const TREE = 'tree';
-const EVENT_PREFIX_REGEXP = /on[A-Z]/;
+const EVENT_PREFIX_REGEXP = /^on[A-Z]/;
 
 /**
  * Native Component
@@ -182,7 +182,7 @@ class NativeComponent {
       let nextProp = nextProps[propKey];
       let prevProp =
         propKey === STYLE ? this._prevStyleCopy :
-        prevProps != null ? prevProps[propKey] : undefined;
+          prevProps != null ? prevProps[propKey] : undefined;
       if (propKey === CHILDREN ||
         !nextProps.hasOwnProperty(propKey) ||
         nextProp === prevProp ||
@@ -219,9 +219,8 @@ class NativeComponent {
           // Assign next prop when prev style is null
           styleUpdates = nextProp;
         }
-
-        // Update event binding
       } else if (EVENT_PREFIX_REGEXP.test(propKey)) {
+        // Update event binding
         let eventName = propKey.slice(2).toLowerCase();
 
         if (typeof prevProp === 'function') {
@@ -231,8 +230,8 @@ class NativeComponent {
         if (typeof nextProp === 'function') {
           Host.driver.addEventListener(this.getNativeNode(), eventName, nextProp, nextProps);
         }
-        // Update other property
       } else {
+        // Update other property
         let payload = {};
         payload[propKey] = nextProp;
         if (nextProp != null) {
@@ -288,7 +287,7 @@ class NativeComponent {
         let prevElement = prevChild && prevChild._currentElement;
 
         if (prevChild != null && shouldUpdateComponent(prevElement,
-            nextElement)) {
+          nextElement)) {
           // Pass the same context when updating chidren
           prevChild.updateComponent(prevElement, nextElement, context,
             context);

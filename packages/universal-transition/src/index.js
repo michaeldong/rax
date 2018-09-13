@@ -2,6 +2,8 @@ import {isWeex, isWeb} from 'universal-env';
 import {convertUnit} from 'style-unit';
 
 export default function transition(node, styles, options, callback) {
+  if (!node) return;
+
   if (typeof options == 'function' || options == null) {
     callback = options;
     options = {
@@ -22,11 +24,12 @@ export default function transition(node, styles, options, callback) {
       timingFunction: options.timingFunction || 'linear',
       delay: options.delay || 0,
       duration: options.duration || 0,
+      needLayout: options.needLayout || false
     }, callback || function() {});
   } else if (isWeb) {
     const duration = options.duration || 0; // ms
     const timingFunction = options.timingFunction || 'linear';
-    const delay = options.delay || 0;  // ms
+    const delay = options.delay || 0; // ms
     const transitionValue = 'all ' + duration + 'ms '
         + timingFunction + ' ' + delay + 'ms';
 

@@ -1,6 +1,6 @@
 {
   "name": "weex-rax-examples",
-  "version": "0.5.0",
+  "version": "0.6.5",
   "description": "Rax examples for weex.",
   "license": "BSD-3-Clause",
   "main": "index.js",
@@ -11,13 +11,10 @@
   "bugs": {
     "url": "https://github.com/alibaba/rax/issues"
   },
-  "scripts": {
-    "test": "babel-node ./test/index.js"
-  },
   "homepage": "https://github.com/alibaba/rax#readme",
   "dependencies": {
-    "rax": "^0.5.0",
-    "universal-env": "^0.5.0",
-    "universal-transition": "^0.5.0"
+    "rax": "^0.6.5",
+    "universal-env": "^0.6.5",
+    "universal-transition": "^0.6.5"
   }
 }

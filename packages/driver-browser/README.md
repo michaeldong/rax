@@ -29,3 +29,19 @@ render(<Example />, null, {
   driver: isWeb ? BrowserDriver : null
 });
 ```
+
+## API
+
+**static setTagNamePrefix(prefix: String)**
+
+Set tag prefix for custom elements.
+
+```js
+import BrowserDriver from 'driver-browser';
+
+BrowserDriver.setTagNamePrefix('a-');
+```
+
+
+
+
