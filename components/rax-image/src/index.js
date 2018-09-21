@@ -117,10 +117,15 @@ class Image extends PureComponent {
 
       if (this.props.children) {
         nativeProps.children = null;
+        nativeProps.style
         return (
           <View style={nativeProps.style}>
-            <NativeImage ref={'nativeImg'} {...nativeProps} />
-            <View style={styles.absoluteImage}>
+            <NativeImage 
+              ref={'nativeImg'} 
+              {...nativeProps} 
+              style={{...nativeProps.style, ...styles.absoluteImage}} 
+            />
+            <View style={styles.absoluteChildren}>
               {this.props.children}
             </View>
           </View>
@@ -135,6 +140,18 @@ class Image extends PureComponent {
 
 var styles = {
   absoluteImage: {
+    margin: 0,
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    marginButtom: 0,
+    padding: 0,
+    paddingTop: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+    paddingButtom: 0,
+  },
+  absoluteChildren: {
     left: 0,
     top: 0,
     position: 'absolute'
