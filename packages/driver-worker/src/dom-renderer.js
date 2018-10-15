@@ -1,4 +1,5 @@
 import setStyle from './set-style';
+const { React, ReactDOM, ICEDesignBase } = window;
 
 // feature-detect support for event listener options
 let supportsPassive = false;
@@ -10,39 +11,10 @@ try {
   });
 } catch (e) { }
 
-const TEXT_CONTENT = 'textContent';
-const TEXT_CONTENT_ATTR = TEXT_CONTENT in document ? TEXT_CONTENT : 'nodeValue';
 const TOUCH_EVENTS = ['touchstart', 'touchmove', 'touchend', 'touchcancel'];
-const EVENT_OPTIONS = supportsPassive
-  ? {
-    capture: true,
-    passive: true
-  }
-  : true;
-
-const NO_BUBBLES_EVENTS = {
-  // Resource Events and Progress Events
-  load: true,
-  error: true,
-  unload: true,
-  abort: true,
-  loadstart: true,
-  progress: true,
-  loadend: true,
-  // Focus Events
-  blur: true,
-  focus: true,
-  // View Events
-  scroll: true, // Not bubles on elements
-  appear: true,
-  disappear: true,
-  // Uncategorized events
-  invalid: true
-};
 
 export default ({ worker, tagNamePrefix = '' }) => {
   const NODES = new Map();
-  const registeredEventCounts = {};
 
   function setNode(vnode, node) {
     node.$$id = vnode.$$id;
@@ -51,7 +23,7 @@ export default ({ worker, tagNamePrefix = '' }) => {
 
   function getNode(vnode) {
     if (!vnode) return null;
-    if (vnode.nodeName === 'BODY') return document.body;
+    if (vnode.nodeName === 'BODY') return body;
     return NODES.get(vnode.$$id);
   }
 
@@ -60,58 +32,14 @@ export default ({ worker, tagNamePrefix = '' }) => {
     return NODES.delete(vnode.$$id);
   }
 
-  function addEvent(node, name) {
-    if (NO_BUBBLES_EVENTS[name]) {
-      addNoBubblesEventListener(node, name);
-    } else {
-      const registeredCount = registeredEventCounts[name];
-
-      if (!registeredCount) {
-        registeredEventCounts[name] = 1;
-        // Top-level register
-        document.addEventListener(name, eventProxyHandler, EVENT_OPTIONS);
-      } else {
-        registeredEventCounts[name]++;
-      }
-    }
+  function addEvent(props, name) {
+    let listenKey = 'on' + name[0].toUpperCase() + name.slice(1);
+    props[listenKey] = eventProxyHandler;
   }
 
-  function removeEvent(node, name) {
-    if (NO_BUBBLES_EVENTS[name]) {
-      removeNoBubblesEventListener(node, name);
-    } else {
-      registeredEventCounts[name]--;
-      if (registeredEventCounts[name] === 0) {
-        document.removeEventListener(name, eventProxyHandler);
-      }
-    }
-  }
-
-  function addNoBubblesEventListener(node, name) {
-    function listener(evt) {
-      const target = {
-        $$id: node.$$id
-      };
-      worker.postMessage({
-        type: 'event',
-        event: {
-          type: name,
-          target,
-          currentTarget: target,
-          detail: evt.detail
-        }
-      });
-    };
-    node[`__$${name}_listener__`] = listener;
-    node.addEventListener(name, listener);
-  }
-
-  function removeNoBubblesEventListener(node, name) {
-    const listener = node[`__$${name}_listener__`];
-    if (listener) {
-      node.removeEventListener(name, listener);
-      node[`__$${name}_listener__`] = null;
-    }
+  function removeEvent(props, name) {
+    let listenKey = 'on' + name[0].toUpperCase() + name.slice(0, 1);
+    delete props[listenKey];
   }
 
   let touch;
@@ -142,10 +70,11 @@ export default ({ worker, tagNamePrefix = '' }) => {
   }
 
   function eventProxyHandler(e) {
+    e.stopPropagation();
     if (e.type === 'click' && touch) return false;
 
     let event = { type: e.type };
-    if (e.target) event.target = e.target.$$id;
+    if (e.currentTarget && e.currentTarget.dataset.targetId) event.target = e.currentTarget.dataset.targetId;
     if (e.type === 'scroll' && e.target === document) {
       event.target = document.body.$$id;
       // page scroll container's top
@@ -194,46 +123,93 @@ export default ({ worker, tagNamePrefix = '' }) => {
     }
   }
 
+  var body = {
+    type: 'div',
+  };
+
+  function generateVTree(vtree) {
+    if (!vtree) return null;
+    if (typeof vtree === 'string') return vtree;
+    let { type, props, children } = vtree;
+    return React.createElement(type, props, children.map(generateVTree));
+  }
+  let __update_vtree__ = () => {};
+  class App extends React.Component{
+    state = { vtree: null };
+    componentWillMount() {
+      __update_vtree__ = (vtree) => {
+        this.setState({ vtree });
+      }
+    }
+    render() {
+      return React.createElement('div', {}, generateVTree(this.state.vtree));
+    }
+  }
+
+  ReactDOM.render(React.createElement(App), document.querySelector('#mountNode'));
+
+  function createTextNode(text) {
+    return createElement('span', {}, [text ? String(text) : '']);
+  }
+
+  function createElement(type, props, children = []) {
+    return { type, props, children };
+  }
+
+  const COMPONENT_MAP = {
+    VIEW: 'div',
+    BUTTON: ICEDesignBase.Button,
+    'BUTTON-GROUP': ICEDesignBase.Button.Group,
+    CHECKBOX: ICEDesignBase.Checkbox,
+  }
+  function getComponent(nodeName) {
+    return COMPONENT_MAP[nodeName] || 'div';
+  }
+  function getProps(vnode) {
+    const props = {};
+
+    if (vnode.$$id) {
+      props['data-target-id'] = vnode.$$id;
+    }
+
+    if (vnode.className) {
+      props.className = vnode.className;
+    }
+
+    if (vnode.style) {
+      props.style = {};
+      setStyle(props, vnode.style);
+    }
+
+    if (vnode.attributes) {
+      for (let i = 0; i < vnode.attributes.length; i++) {
+        let a = vnode.attributes[i];
+        props[a.name] = a.value;
+      }
+    }
+
+    if (vnode.events) {
+      for (let i = 0; i < vnode.events.length; i++) {
+        addEvent(props, vnode.events[i]);
+      }
+    }
+    return props;
+  }
+
   function createNode(vnode) {
     let node;
     if (vnode.nodeType === 3) {
-      node = document.createTextNode(vnode.data);
+      node = createTextNode(vnode.data);
     } else if (vnode.nodeType === 1) {
-      node = document.createElement(tagNamePrefix + vnode.nodeName);
 
-      if (vnode.className) {
-        node.className = vnode.className;
-      }
-
-      if (vnode.style) {
-        setStyle(node, vnode.style);
-      }
-
-      if (vnode.attributes) {
-        for (let i = 0; i < vnode.attributes.length; i++) {
-          let a = vnode.attributes[i];
-
-          if (typeof a.value === 'object' || typeof a.value === 'boolean') {
-            node[a.name] = a.value;
-          } else {
-            node.setAttribute(a.name, a.value);
-          }
-        }
-      }
-
+      var children = [];
       if (vnode.childNodes) {
         for (let i = 0; i < vnode.childNodes.length; i++) {
-          node.appendChild(createNode(vnode.childNodes[i]));
+          children[i] = createNode(vnode.childNodes[i])
         }
       }
 
-      if (vnode.events) {
-        for (let i = 0; i < vnode.events.length; i++) {
-          addEvent(node, vnode.events[i]);
-        }
-      }
-    } else if (vnode.nodeType === 8) {
-      node = document.createComment(vnode.data);
+      node = createElement(getComponent(vnode.nodeName), getProps(vnode), children);
     }
 
     setNode(vnode, node);
@@ -247,7 +223,7 @@ export default ({ worker, tagNamePrefix = '' }) => {
       let vnode = target;
 
       if (vnode && vnode.nodeName === 'BODY') {
-        document.body.$$id = vnode.$$id;
+        body.$$id = vnode.$$id;
       }
 
       let parent = getNode(vnode);
@@ -256,7 +232,7 @@ export default ({ worker, tagNamePrefix = '' }) => {
           let node = getNode(removedNodes[i]);
           deleteNode(node);
           if (parent && node) {
-            parent.removeChild(node);
+            parent.children.splice(parent.children.indexOf(node), 1);
           }
         }
       }
@@ -269,10 +245,18 @@ export default ({ worker, tagNamePrefix = '' }) => {
           }
 
           if (parent) {
-            parent.insertBefore(newNode, nextSibling && getNode(nextSibling) || null);
+            if (parent.children) {
+              parent.children.push(newNode);
+            } else {
+              parent.children = [newNode];
+            }
+            // parent.insertBefore(newNode, nextSibling && getNode(nextSibling) || null);
           }
         }
+
       }
+
+      __update_vtree__(body);
     },
     attributes({ target, attributeName, newValue, style }) {
       let node = getNode(target);
@@ -281,7 +265,7 @@ export default ({ worker, tagNamePrefix = '' }) => {
 
       // TODO: some with `createNode`, should processed by one method
       if (style) {
-        setStyle(node, style);
+        setStyle(node.props, style);
       } else if (newValue == null) {
         node.removeAttribute(attributeName);
       } else if (typeof newValue === 'object' || typeof newValue === 'boolean') {
@@ -292,7 +276,8 @@ export default ({ worker, tagNamePrefix = '' }) => {
     },
     characterData({ target, newValue }) {
       let node = getNode(target);
-      node[TEXT_CONTENT_ATTR] = newValue;
+      node.children[0] = newValue;
+      __update_vtree__(body);
     },
     addEvent({ target, eventName }) {
       let node = getNode(target);

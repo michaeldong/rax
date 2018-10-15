@@ -92,7 +92,7 @@ export default ({ postMessage, addEventListener }) => {
       if (nodeType === ELEMENT_NODE) {
         out = {
           ...out,
-          events: Object.keys(obj.eventListeners || {}),
+          events: Object.keys(obj._eventListeners || {}),
           attributes: obj.attributes,
           nodeName: obj.nodeName,
           style: obj.style
