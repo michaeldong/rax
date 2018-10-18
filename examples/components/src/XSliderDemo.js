@@ -3,7 +3,7 @@ import {createElement, Component, render, findDOMNode} from 'rax';
 import View from 'rax-view';
 import Text from 'rax-text';
 import RecyclerView from 'rax-recyclerview';
-import Slider from 'rax-xslider';
+import Slider from '../src/src';
 
 const styles = {
   item: {
@@ -74,6 +74,36 @@ class XSliderDemo extends Component {
     const viewportSize = 750;
     const cardSize = 600;
 
+    // var colors = [
+    //   'red',
+    //   'green',
+    //   'blue',
+    //   'orange',
+    //   'yellow'
+    //   ]
+    var colors = []
+    if(this.props.testprop % 2 == 0) {
+      colors = [
+        'green',
+        'red',
+        // 'blue',
+        // 'orange',
+        // 'yellow'
+      ];
+    }
+    else {
+      colors = [
+      // 'red',
+      // 'green',
+      'blue',
+      'orange',
+      'yellow'
+      ]
+    }
+
+    // if(Math.random() > 0.5) {
+   
+    // }
 
     return (<View style={{flex: 1, justifyContent: 'center'}}>
       <RecyclerView>
@@ -89,7 +119,7 @@ class XSliderDemo extends Component {
             // autoPlay={true}
             // interval={500}
             duration={300}
-            // loop={true}
+            loop={true}
             afterSwitch={this.afterSwitch}
             // indicatorComponent={null}
             cardTransitionSpec={this.getCardTransitionSpec}
@@ -110,9 +140,9 @@ class XSliderDemo extends Component {
             })}
           </Slider>
         </RecyclerView.Cell>
-        {[0, 1, 2, 3, 4, 5, 6].map(() => {
+        {/* {[0, 1, 2, 3, 4, 5, 6].map(() => {
           return <RecyclerView.Cell style={{height: 300, backgroundColor: '#ccc'}}>row</RecyclerView.Cell>;
-        })}
+        })} */}
       </RecyclerView>
     </View>);
   }

@@ -39,12 +39,15 @@ import XSliderDemo from './XSliderDemo';
 import GyroscopeParallaxDemo from './GyroscopeParallaxDemo';
 import GestureViewDemo from './GestureViewDemo';
 
+import Button from 'rax-button';
+
 class Page extends Component {
+
   render() {
     return <ScrollView ref={(scrollview) => {
       this.scrollview = scrollview;
     }}>
-      <View>
+      {/* <View>
         <Text style={styles.title}>GyroscopeParallax</Text>
         <GyroscopeParallaxDemo />
       </View>
@@ -204,16 +207,32 @@ class Page extends Component {
       <View>
         <Text style={styles.title}>TabPanel</Text>
         <TabPanelDemo />
-      </View>
+      </View> */}
+    {/* <View>
+      <Text style={styles.title}>Button</Text>
+      <ButtonDemo />
+    </View> */}
 
-      <View>
+     <View>
         <Text style={styles.title}>XSlider</Text>
-        <XSliderDemo />
+        <Button onPress={this.handlePress1}>Button</Button>
+        <XSliderDemo testprop={this.state.timesPressed1}>
+        </XSliderDemo>
       </View>
 
 
     </ScrollView>;
   }
+
+  state = {
+    timesPressed1: 0,
+  };
+
+  handlePress1 = () => {
+    this.setState({
+      timesPressed1: this.state.timesPressed1 + 1,
+    });
+  };
 }
 
 let styles = {
