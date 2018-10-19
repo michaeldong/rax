@@ -225,7 +225,7 @@ class Page extends Component {
   }
 
   state = {
-    timesPressed1: 0,
+    timesPressed1: 1,
   };
 
   handlePress1 = () => {

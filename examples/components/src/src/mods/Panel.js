@@ -48,7 +48,8 @@ class Panel extends Component {
   render() {
     return (
       <View {...this.props} ref={'card'} onAppear={null} onDisappear={null}>
-        {this.state.isRender ? this.props.children : this.props.children}
+        {console.log(this.state.isRender)}
+        {this.state.isRender ? this.props.children : null}
       </View>
     );
   }
