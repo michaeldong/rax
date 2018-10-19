@@ -126,11 +126,6 @@ class BaseView extends Component {
       }
 
       this.loopIndex = startIndexes.length;
-      // setTimeout(() => {
-      //   this.switchTo(this.loopIndex, {ignoreEvent: true, isInitial: true, duration: 1});
-      //   // this.loopIndex = startIndexes.length;
-      //   // this.autoPlay();
-      // }, 0);
     }
     
      setTimeout(() => {
