@@ -98,12 +98,7 @@ class BaseView extends Component {
   }
 
   componentWillReceiveProps(props) {
-    let {indexes,startIndexes,defaultIndex} = this.computeSize({props});
-
-    // let {defaultIndex} = this.props;
-    // let loopIndex = startIndexes.length;
-    // this.loopIndex = loopIndex;
-    // this.itemCount = this.filterElements(this.props, Panel).length;
+    let {indexes,startIndexes} = this.computeSize({props});
     
     this.itemCount = this.filterElements(props, Panel).length;
 
@@ -115,9 +110,9 @@ class BaseView extends Component {
           posIndex: loopIndex
         };
       });
-       // 把东西归位
+
       let {cardSize, vertical} = this.props;
-      
+  
       for (let i = 0; i < this.itemCount * 3; i++) {
         if (this.refs[`card_${i}`]) {
           let node = findDOMNode(this.refs[`card_${i}`]);
@@ -130,10 +125,10 @@ class BaseView extends Component {
         }
       }
 
-      this.loopIndex =  0 + startIndexes.length;
+      this.loopIndex = startIndexes.length;
       setTimeout(() => {
         this.switchTo(this.loopIndex);
-        this.loopIndex = 0 + startIndexes.length;
+        this.loopIndex = startIndexes.length;
         this.autoPlay();
       }, 0);
     }

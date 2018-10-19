@@ -3,7 +3,7 @@ import {createElement, Component, render, findDOMNode} from 'rax';
 import View from 'rax-view';
 import Text from 'rax-text';
 import RecyclerView from 'rax-recyclerview';
-import Slider from '../src/src';
+import Slider from '../src/xslider_fork';
 
 const styles = {
   item: {
@@ -92,18 +92,18 @@ class XSliderDemo extends Component {
     //   'yellow'
     //   ]
     var colors = [
+      'black',
       'blue',
-      'red',
       // 'blue',
       // 'orange',
       // 'yellow'
     ];
     if(this.props.testprop % 2 != 0) {
       colors = [
-        'green',
+        'orange',
+        'yellow',
         'red',
-        // 'orange',
-        // 'yellow'
+        'green'
       ];
     }
     else {
