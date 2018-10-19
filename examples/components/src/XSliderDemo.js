@@ -98,24 +98,23 @@ class XSliderDemo extends Component {
       // 'orange',
       // 'yellow'
     ];
-    // if(this.props.testprop % 2 != 0) {
-    //   colors = [
-    //     'green',
-    //     'red',
-    //     'blue',
-    //     // 'orange',
-    //     // 'yellow'
-    //   ];
-    // }
-    // else {
-    //   colors = [
-    //   // 'red',
-    //   // 'green',
-    //   'green',
-    //   'red',
-    //   'blue'
-    //   ]
-    // }
+    if(this.props.testprop % 2 != 0) {
+      colors = [
+        'green',
+        'red',
+        // 'orange',
+        // 'yellow'
+      ];
+    }
+    else {
+      colors = [
+      // 'red',
+      // 'green',
+      'green',
+      'red',
+      'blue'
+      ]
+    }
 
     // if(Math.random() > 0.5) {
    

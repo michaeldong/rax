@@ -105,7 +105,9 @@ class BaseView extends Component {
     // this.loopIndex = loopIndex;
     // this.itemCount = this.filterElements(this.props, Panel).length;
     
-    // if (indexes.length != this.indexesQueue.length) {
+    this.itemCount = this.filterElements(props, Panel).length;
+
+    if (indexes.length != this.indexesQueue.length) {
       this.indexesQueue = indexes.map((index, loopIndex) => {
         return {
           index,
@@ -113,35 +115,31 @@ class BaseView extends Component {
           posIndex: loopIndex
         };
       });
-    // }
-
-    this.itemCount = this.filterElements(props, Panel).length;
-   
-    // 把东西归位
-    let {cardSize, vertical} = this.props;
-    
-    for (let i = 0; i < this.itemCount * 3; i++) {
-      if (this.refs[`card_${i}`]) {
-        let node = findDOMNode(this.refs[`card_${i}`]);
-        setNativeProps(findDOMNode(node), {
-          style: {
-            transition: 'none', // prevent transition on web
-            ...vertical ? {top: `${i * cardSize}rem`} : {left: `${i * cardSize}rem`}
-          }
-        });
+       // 把东西归位
+      let {cardSize, vertical} = this.props;
+      
+      for (let i = 0; i < this.itemCount * 3; i++) {
+        if (this.refs[`card_${i}`]) {
+          let node = findDOMNode(this.refs[`card_${i}`]);
+          setNativeProps(findDOMNode(node), {
+            style: {
+              transition: 'none', // prevent transition on web
+              ...vertical ? {top: `${i * cardSize}rem`} : {left: `${i * cardSize}rem`}
+            }
+          });
+        }
       }
+
+      this.loopIndex =  0 + startIndexes.length;
+      setTimeout(() => {
+        this.switchTo(this.loopIndex);
+        this.loopIndex = 0 + startIndexes.length;
+        this.autoPlay();
+      }, 0);
     }
-
-    let loopIndex = 0 + startIndexes.length;
-    this.loopIndex = loopIndex;
-
-    console.log(this.loopIndex);
-    setTimeout(() => {
-      this.switchTo(loopIndex);
-      this.loopIndex = 0 + startIndexes.length;
-      this.autoPlay();
-      // this.loopIndex = 0 + startIndexes.length;
-    }, 0);
+    else {
+      this.switchTo(this.loopIndex, {ignoreEvent: true, isInitial: true, duration: 1});
+    }
   }
 
 
