@@ -133,8 +133,8 @@ class XSliderDemo extends Component {
             minOffset={0}
             maxOffset={(colors.length - 1) * cardSize - startGap - endGap}
             // autoPlay={true}
-            // interval={500}
-            duration={300}
+            interval={3000}
+            // duration={3000}
             loop={true}
             afterSwitch={this.afterSwitch}
             // indicatorComponent={null}
