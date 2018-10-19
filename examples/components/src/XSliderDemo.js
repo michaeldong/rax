@@ -68,12 +68,22 @@ class XSliderDemo extends Component {
     // console.log(e.index)
   }
 
+  state = {
+    flag: false
+  }
+  constructor(props) {
+    super(props);
+    this.counter = 0;
+  }
+  
   render() {
     const startGap = 75;
     const endGap = 75;
     const viewportSize = 750;
     const cardSize = 600;
-
+    this.counter++;
+    const xsliderKey = this.counter;
+    
     // var colors = [
     //   'red',
     //   'green',
@@ -81,25 +91,31 @@ class XSliderDemo extends Component {
     //   'orange',
     //   'yellow'
     //   ]
-    var colors = []
-    if(this.props.testprop % 2 == 0) {
-      colors = [
-        'green',
-        'red',
-        // 'blue',
-        // 'orange',
-        // 'yellow'
-      ];
-    }
-    else {
-      colors = [
-      // 'red',
-      // 'green',
+    var colors = [
       'blue',
-      'orange',
-      'yellow'
-      ]
-    }
+      'red',
+      // 'blue',
+      // 'orange',
+      // 'yellow'
+    ];
+    // if(this.props.testprop % 2 != 0) {
+    //   colors = [
+    //     'green',
+    //     'red',
+    //     'blue',
+    //     // 'orange',
+    //     // 'yellow'
+    //   ];
+    // }
+    // else {
+    //   colors = [
+    //   // 'red',
+    //   // 'green',
+    //   'green',
+    //   'red',
+    //   'blue'
+    //   ]
+    // }
 
     // if(Math.random() > 0.5) {
    
@@ -110,6 +126,7 @@ class XSliderDemo extends Component {
         <RecyclerView.Cell>
           <Slider ref="slider"
             style={{height: 750}}
+            // key={'xsliderkey_'+xsliderKey}
             cardSize={cardSize}
             viewportSize={viewportSize}
             startGap={startGap}

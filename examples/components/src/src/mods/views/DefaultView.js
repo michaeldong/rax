@@ -303,6 +303,8 @@ class DefaultView extends BaseView {
         ref="content">
         {indexes.map((index, loopIndex) => {
           let child = children[index];
+          console.log("loopIndex "+loopIndex);
+          console.log("left "+loopIndex * cardSize);
           if (child && child.type === Panel) {
             let cardStyle = this.getCardInitialStyle(loopIndex === defaultLoopIndex);
             return (<Panel ref={`card_${loopIndex}`} {...child.props}
